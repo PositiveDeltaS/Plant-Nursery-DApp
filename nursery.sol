@@ -8,7 +8,13 @@ contract Nursery {
     uint256 plantTimer = 60; //adjust
     uint256 public nextPlantTime;
     uint256 public plantsDeployed;
-    string[] seeds;
+    string[] public seeds;
+    string public seedView;
+    uint public iView;
+    uint public randView;
+    uint public lifespanView;
+    
+
    
     constructor () public {
         owner = msg.sender;
@@ -23,13 +29,23 @@ contract Nursery {
         uint seedMod;
         string memory seed;
         seedMod = msg.value > 1 ether ? 5 : 4;
+
+        
         uint rand = uint(keccak256(abi.encodePacked(now)));
         uint i = rand % seedMod;
         seed = seeds[i];
+        
+        seedView = seed;
+        iView = i;
+        randView = rand;
+        
+        
         uint256 lifespan = rand % 864000; // 8 days as initial upper bound
         lifespan = lifespan + 172800; // Add 2 days, setting lifespan to be bounded between 2 and 10 days
+        
+        lifespanView = lifespan;
+        
         address myPlant = new Plant(msg.sender, seed, lifespan);
-        myPlant.transfer(msg.value);
         nextPlantTime = now + plantTimer;
         plantsDeployed++;
     }

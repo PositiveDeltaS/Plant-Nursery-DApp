@@ -43,6 +43,7 @@ contract Plant {
         }
         require(address(this).balance >= target, 'Not enough water! No fruit for you.');
         redistribute();
+        delete waterers;
         return fruit; 
     }
     //give funds back to contributors
