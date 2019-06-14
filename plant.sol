@@ -1,11 +1,11 @@
 pragma solidity ^0.4.24;
 contract Plant {
     address public owner;
-    string internal fruit;
+    string private fruit;
     uint public deathTime;
     uint public target;
     Waterer[] public waterers;
-    bool public successfulHarvest = false;
+    bool private successfulHarvest = false;
  
     constructor (address powner, string seed, uint lifespan) public payable {
         owner = powner;
@@ -55,8 +55,9 @@ contract Plant {
       
     }
     //checks to see if the harvest was successful
-    function checkHarvest () public view returns(string) {
+    function checkFruitFromHarvest () public view returns(string) {
         require(true == successfulHarvest, "No fruit yet");
+        successfulHarvest = false;
         return fruit;
     }
     // give funds back to contributors and kill contract
