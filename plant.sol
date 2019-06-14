@@ -28,8 +28,6 @@ contract Plant {
         target = 3;
         //lifespan randomly generated amount of seconds between 2-10 days
         deathTime = now + lifespan;
-        //Initialize with something
-        //waterers.push(Waterer(msg.sender, 1));
     }
 
     //people contributing to plant watering
