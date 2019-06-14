@@ -1,10 +1,11 @@
 pragma solidity ^0.4.24;
 contract Plant {
     address public owner;
-    string internal fruit;
+    string private fruit;
     uint public deathTime;
     uint public target;
     Waterer[] public waterers;
+    bool private successfulHarvest = false;
  
     constructor (address powner, string seed, uint lifespan) public payable {
         owner = powner;
@@ -36,26 +37,34 @@ contract Plant {
         waterers.push(Waterer(msg.sender, msg.value));
     }
     //checks for plant death and returns fruit if target is reached, calls funds redistribution function in either case
-    function harvest() public returns(string) {
+    function harvest() public {
         require(owner == msg.sender);
         if(isDead()) {
             decompose();
         }
         require(address(this).balance >= target, 'Not enough water! No fruit for you.');
+        successfulHarvest = true;
         redistribute();
         delete waterers;
-        return fruit; 
     }
     //give funds back to contributors
     function redistribute() private {
         for(uint i = 0; i < waterers.length; ++i){
             waterers[i].gardenerAddress.transfer(waterers[i].amount);
-        } 
+        }
+      
+    }
+    //checks to see if the harvest was successful
+    function checkFruitFromHarvest () public view returns(string) {
+        require(true == successfulHarvest, "No fruit yet");
+        successfulHarvest = false;
+        return fruit;
     }
     // give funds back to contributors and kill contract
     function decompose() private {
         redistribute();
         selfdestruct(owner);
     }   
-     
+ 
+    
 }
